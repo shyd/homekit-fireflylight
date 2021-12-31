@@ -3,6 +3,9 @@
 //   DEVICE-SPECIFIC LED SERVICES //
 ////////////////////////////////////
 
+CUSTOM_CHAR(Frequency, ac9e2a89-78fa-4279-9d0e-8873fdb30d3f, PR+PW+EV, UINT8, 120, 0, 240, false);
+CUSTOM_CHAR(Inverted, ec2fa3e5-24d0-4e53-a620-8e6348e1cc23, PR+PW+EV, BOOL, 0, 0, 1, false);
+
 #include "extras/PwmPin.h"                          // NEW! Include this HomeSpan "extra" to create LED-compatible PWM signals on one or more pins
 
 struct DEV_LED : Service::LightBulb {               // ON/OFF LED
@@ -36,15 +39,20 @@ struct DEV_DimmableLED : Service::LightBulb {       // Dimmable LED
   LedPin *ledPin;                                   // NEW! Create reference to LED Pin instantiated below
   SpanCharacteristic *power;                        // reference to the On Characteristic
   SpanCharacteristic *level;                        // NEW! Create a reference to the Brightness Characteristic instantiated below
+  SpanCharacteristic *freq;
+  SpanCharacteristic *inverted;
+  int count = 0;
   
   DEV_DimmableLED(int pin) : Service::LightBulb(){       // constructor() method
 
     power=new Characteristic::On();     
-                
-    level=new Characteristic::Brightness(50);       // NEW! Instantiate the Brightness Characteristic with an initial value of 50% (same as we did in Example 4)
+    freq=new Characteristic::Frequency(12, true);
+    inverted=new Characteristic::Inverted(0, true);
+    level=new Characteristic::Brightness(50, true);       // NEW! Instantiate the Brightness Characteristic with an initial value of 50% (same as we did in Example 4)
     level->setRange(5,100,1);                       // NEW! This sets the range of the Brightness to be from a min of 5%, to a max of 100%, in steps of 1% (different from Example 4 values)
 
     this->ledPin=new LedPin(pin);                   // NEW! Configures a PWM LED for output to the specified pin.  Note pinMode() does NOT need to be called in advance
+
     
   } // end constructor
 

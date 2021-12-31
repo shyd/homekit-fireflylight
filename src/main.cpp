@@ -59,38 +59,55 @@ void setup() {
   
   Serial.begin(115200);
 
+  homeSpan.enableOTA();
   homeSpan.begin(Category::Lighting,"HomeSpan LEDs");
   
   new SpanAccessory(); 
   
-    new Service::AccessoryInformation(); 
-      new Characteristic::Name("On/Off LED"); 
-      new Characteristic::Manufacturer("HomeSpan"); 
-      new Characteristic::SerialNumber("123-ABC"); 
-      new Characteristic::Model("20mA LED"); 
-      new Characteristic::FirmwareRevision("0.9"); 
-      new Characteristic::Identify();            
-      
-    new Service::HAPProtocolInformation();      
-      new Characteristic::Version("1.1.0");     
-
-    new DEV_LED(16);                // create an on/off LED attached to pin 16 (same as in Example 5)
-
-  new SpanAccessory(); 
-  
     new Service::AccessoryInformation();    
-      new Characteristic::Name("Dimmable LED");    
-      new Characteristic::Manufacturer("HomeSpan"); 
+      new Characteristic::Name("LED String 1");    
+      new Characteristic::Manufacturer("Schuett"); 
       new Characteristic::SerialNumber("123-ABC");  
-      new Characteristic::Model("20mA LED");   
-      new Characteristic::FirmwareRevision("0.9");  
-      new Characteristic::Identify();               
+      new Characteristic::Model("Ikea Vissvass");   
+      new Characteristic::FirmwareRevision(HOMESPAN_VERSION);  
+      new Characteristic::Identify();             
       
     new Service::HAPProtocolInformation();          
       new Characteristic::Version("1.1.0");         
   
-    new DEV_DimmableLED(17);        // NEW! create a dimmable (PWM-driven) LED attached to pin 17.  See new code at end of DEV_LED.h
+    new DEV_DimmableLED(33);        // NEW! create a dimmable (PWM-driven) LED attached to pin 17.  See new code at end of DEV_LED.h
+    
+  new SpanAccessory(); 
+  
+    new Service::AccessoryInformation();    
+      new Characteristic::Name("LED String 2");    
+      new Characteristic::Manufacturer("Schuett"); 
+      new Characteristic::SerialNumber("123-ABC");  
+      new Characteristic::Model("Ikea Vissvass");   
+      new Characteristic::FirmwareRevision(HOMESPAN_VERSION);  
+      new Characteristic::Identify();             
+      
+    new Service::HAPProtocolInformation();          
+      new Characteristic::Version("1.1.0");         
+  
+    new DEV_DimmableLED(25);
 
+  new SpanAccessory(); 
+  
+    new Service::AccessoryInformation();    
+      new Characteristic::Name("LED String 3");    
+      new Characteristic::Manufacturer("Schuett"); 
+      new Characteristic::SerialNumber("123-ABC");  
+      new Characteristic::Model("Ikea Vissvass");   
+      new Characteristic::FirmwareRevision(HOMESPAN_VERSION);  
+      new Characteristic::Identify();             
+      
+    new Service::HAPProtocolInformation();          
+      new Characteristic::Version("1.1.0");         
+  
+    new DEV_DimmableLED(26);
+
+ 
 } // end of setup()
 
 //////////////////////////////////////
