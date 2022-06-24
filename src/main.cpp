@@ -40,6 +40,10 @@
 #include "HomeSpan.h" 
 #include "DEV_LED.h"          
 
+TaskHandle_t h_HK_poll;
+
+void HK_poll(void * pvParameters);
+
 void setup() {
 
   // Example 6 changes Example 5 so that LED #2 is now dimmable, instead of just on/off.  This requires us to create a new
@@ -75,7 +79,7 @@ void setup() {
     new Service::HAPProtocolInformation();          
       new Characteristic::Version("1.1.0");         
   
-    new DEV_DimmableLED(33);        // NEW! create a dimmable (PWM-driven) LED attached to pin 17.  See new code at end of DEV_LED.h
+    new DEV_DimmableLED(33, LEDC_CHANNEL_0, LEDC_TIMER_0);        // NEW! create a dimmable (PWM-driven) LED attached to pin 17.  See new code at end of DEV_LED.h
     
   new SpanAccessory(); 
   
@@ -90,7 +94,7 @@ void setup() {
     new Service::HAPProtocolInformation();          
       new Characteristic::Version("1.1.0");         
   
-    new DEV_DimmableLED(25);
+    new DEV_DimmableLED(25, LEDC_CHANNEL_1, LEDC_TIMER_1);
 
   new SpanAccessory(); 
   
@@ -105,15 +109,32 @@ void setup() {
     new Service::HAPProtocolInformation();          
       new Characteristic::Version("1.1.0");         
   
-    new DEV_DimmableLED(26);
+    new DEV_DimmableLED(26, LEDC_CHANNEL_2, LEDC_TIMER_2);
 
+    xTaskCreatePinnedToCore(
+                      HK_poll,    /* Task function. */
+                      "HK_poll",  /* name of task. */
+                      10000,       /* Stack size of task */
+                      NULL,        /* parameter of the task */
+                      1,           /* priority of the task */
+                      &h_HK_poll, /* Task handle to keep track of created task */
+                      0);          /* pin task to core 0 */  
+    
+    delay(1000);
  
 } // end of setup()
 
 //////////////////////////////////////
 
+void HK_poll(void * pvParameters){
+
+  while(1){
+    homeSpan.poll();
+  }   //loop
+}     //task
+
 void loop(){
   
-  homeSpan.poll();
+  //homeSpan.poll();
   
 } // end of loop()
